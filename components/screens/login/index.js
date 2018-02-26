@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import {
   Container,
   Header,
@@ -13,6 +14,26 @@ import {
   Right,
   Body,
 } from 'native-base';
+
+const FACBOOK_APP_ID = 260440777826338;
+
+login = async () => {};
+
+renderButton = () => (
+  <TouchableOpacity onPress={() => this.login()}>
+    <View
+      style={{
+        width: '50%',
+        alignSelf: 'center',
+        borderRadius: 4,
+        padding: 24,
+        backgroundColor: '#3B5998',
+      }}
+    >
+      <Text style={{ color: 'white', fontWeight: 'bold' }}>Login to Facebook</Text>
+    </View>
+  </TouchableOpacity>
+);
 
 export default class Login extends Component {
   render() {
