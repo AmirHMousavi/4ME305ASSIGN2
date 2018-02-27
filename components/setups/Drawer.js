@@ -12,7 +12,7 @@ const Drawer = DrawerNavigator(
     MapScreen: { screen: MapScreen },
   },
   {
-    initialRouteName: 'MapScreen',
+    initialRouteName: 'LoginScreen',
     contentOptions: {
       activeTintColor: '#e91e63',
     },

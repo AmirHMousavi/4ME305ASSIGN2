@@ -23,13 +23,13 @@ const datas = [
 ];
 
 class SideBar extends Component {
-  /*   constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
       shadowOffsetWidth: 1,
       shadowRadius: 4,
     };
-  } */
+  }
 
   render() {
     return (
