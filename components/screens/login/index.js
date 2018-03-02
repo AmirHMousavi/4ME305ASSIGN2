@@ -1,27 +1,24 @@
 import React, { Component } from 'react';
-import { View, AsyncStorage } from 'react-native';
+import { View, AsyncStorage, Image } from 'react-native';
 import {
   Container,
-  Header,
-  Title,
   Content,
   Text,
   Button,
   Icon,
-  Footer,
-  FooterTab,
-  Left,
-  Right,
-  Body,
-  Input,
   Form,
   Item,
   Label,
   Toast,
+  Input,
+  Fab,
+  IconNB,
 } from 'native-base';
 import Expo from 'expo';
+import MyFooter from '../../setups/MyFooter';
+import MyHeader from '../../setups/MyHeader';
 
-const FACBOOK_APP_ID = '204914923589119';
+const FACBOOK_APP_ID = '260440777826338';
 
 export default class Login extends Component {
   constructor() {
@@ -29,27 +26,16 @@ export default class Login extends Component {
     this.state = {
       token: null,
       response: null,
+      image: null,
+      active: false,
     };
   }
 
-  componentWillMount() {
-    console.log('componentWillMount');
-  }
-
   componentDidMount() {
-    console.log('component did mount');
     this.getDataFromStorage();
   }
 
-  componentWillUpdate() {
-    console.log('componentWillUpdate');
-  }
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-  }
-
   getDataFromStorage = async () => {
-    console.log('getDataFromStorage');
     const keys = ['FBToken', 'FBResponse'];
     AsyncStorage.multiGet(keys, (err, stores) => {
       stores.forEach((result, i, store) => {
@@ -64,7 +50,6 @@ export default class Login extends Component {
   };
 
   callGraph = async (token) => {
-    console.log('callGraph');
     const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture`);
     const responceJSON = JSON.stringify(await response.json());
     try {
@@ -79,7 +64,6 @@ export default class Login extends Component {
   };
 
   loginWithFacebook = async () => {
-    console.log('loginWithFacebook');
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(FACBOOK_APP_ID, {
       permissions: ['public_profile', 'email'],
     });
@@ -100,66 +84,96 @@ export default class Login extends Component {
     this.getDataFromStorage();
   };
 
+  openMenu = () => {
+    this.props.navigation.navigate('DrawerOpen');
+  };
+
+  pickImage = async () => {
+    const result = await Expo.ImagePicker.launchImageLibraryAsync({
+      allowsEditing: false,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
+  renderFab() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Fab
+          active={this.state.active}
+          direction="up"
+          containerStyle={{}}
+          style={{ backgroundColor: '#5067FF' }}
+          position="bottomRight"
+          onPress={() => this.setState({ active: !this.state.active })}
+        >
+          <IconNB name="md-share" />
+          <Button style={{ backgroundColor: '#34A34F' }}>
+            <IconNB name="logo-whatsapp" />
+          </Button>
+          <Button style={{ backgroundColor: '#3B5998' }}>
+            <IconNB name="logo-facebook" />
+          </Button>
+          <Button disabled style={{ backgroundColor: '#DD5144' }}>
+            <IconNB name="ios-mail" />
+          </Button>
+        </Fab>
+      </View>
+    );
+  }
+
   render() {
-    console.log('Render......');
+    const { image } = this.state;
     if (this.state.token && this.state.response) {
-      console.log('State response', this.state.response);
-      console.log('State Token', this.state.token);
       return (
         <Container style={{ backgroundColor: '#fff' }}>
-          <Header>
-            <Left>
-              <Button transparent onPress={() => this.props.navigation.navigate('DrawerOpen')}>
-                <Icon name="md-menu" />
+          <MyHeader onPress={() => this.openMenu} name="Login Screen" />
+          <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between' }}>
+            <View style={{ height: 150, alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                Welcome {this.state.response.name}
+              </Text>
+              <Text style={{ fontSize: 20, fontWeight: 'normal' }}>You are logged in as</Text>
+              <Text style={{ fontSize: 20, fontWeight: 'normal' }}>
+                {this.state.response.email}
+              </Text>
+              <Button
+                iconLeft
+                block
+                danger
+                style={{ margin: 15, marginTop: 0 }}
+                onPress={() => this.logOut()}
+              >
+                <Icon active name="md-log-out" />
+                <Text>Log out</Text>
               </Button>
-            </Left>
-            <Body>
-              <Title>Header</Title>
-            </Body>
-            <Right />
-          </Header>
-          <Content>
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-              Welcome {this.state.response.name}
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: 'normal' }}>
-              You are logged in with {this.state.response.email}
-            </Text>
-            <Button
-              iconLeft
-              block
-              danger
-              style={{ margin: 15, marginTop: 0 }}
-              onPress={() => this.logOut()}
+            </View>
+            <View style={{ height: 150, alignItems: 'center', justifyContent: 'center' }}>
+              <Button block primary onPress={this.pickImage}>
+                <Text>Pick Image To Share</Text>
+              </Button>
+              {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+            </View>
+            <View
+              style={{
+                alignItems: 'flex-end',
+              }}
             >
-              <Icon active name="md-log-out" />
-              <Text>Log out</Text>
-            </Button>
-          </Content>
-          <Footer>
-            <FooterTab>
-              <Button active full>
-                <Text>4ME305 Assignment 2</Text>
-              </Button>
-            </FooterTab>
-          </Footer>
+              {image ? this.renderFab() : <View />}
+            </View>
+          </View>
+          <MyFooter />
         </Container>
       );
     }
     return (
       <Container style={{ backgroundColor: '#fff' }}>
-        <Header>
-          <Left>
-            <Button transparent onPress={() => this.props.navigation.navigate('DrawerOpen')}>
-              <Icon name="md-menu" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Header</Title>
-          </Body>
-          <Right />
-        </Header>
-
+        <MyHeader onPress={() => this.openMenu} name="Login Screen" />
         <Content padder>
           <Form>
             <Item floatingLabel>
@@ -195,14 +209,7 @@ export default class Login extends Component {
             </Button>
           </View>
         </Content>
-
-        <Footer>
-          <FooterTab>
-            <Button active full>
-              <Text>4ME305 Assignment 2</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
+        <MyFooter />
       </Container>
     );
   }

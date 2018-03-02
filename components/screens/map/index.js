@@ -1,21 +1,10 @@
 import React, { Component } from 'react';
 import { View, Dimensions } from 'react-native';
-import {
-  Container,
-  Header,
-  Title,
-  Text,
-  Button,
-  Icon,
-  Footer,
-  FooterTab,
-  Left,
-  Right,
-  Body,
-  Spinner,
-} from 'native-base';
+import { Container, Text, Spinner, Badge } from 'native-base';
 import { MapView, Location, Permissions } from 'expo';
 import styles from './styles';
+import MyHeader from '../../setups/MyHeader';
+import MyFooter from '../../setups/MyFooter';
 
 export default class Map extends Component {
   constructor(props) {
@@ -49,6 +38,10 @@ export default class Map extends Component {
     this.setState({ location });
   };
 
+  openMenu = () => {
+    this.props.navigation.navigate('DrawerOpen');
+  };
+
   render() {
     let text = 'Waiting..';
     if (this.state.location === null) {
@@ -74,17 +67,7 @@ export default class Map extends Component {
 
     return (
       <Container style={{ backgroundColor: '#fff' }}>
-        <Header>
-          <Left>
-            <Button transparent onPress={() => this.props.navigation.navigate('DrawerOpen')}>
-              <Icon name="md-menu" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>MapView Screen</Title>
-          </Body>
-          <Right />
-        </Header>
+        <MyHeader onPress={() => this.openMenu} name="MapView Screen" />
 
         <View style={styles.container}>
           <MapView
@@ -108,20 +91,13 @@ export default class Map extends Component {
             </MapView.Marker>
           </MapView>
         </View>
-
-        <Footer>
-          <View style={[styles.bubble, styles.latlng]}>
-            <Text style={{ textAlign: 'center' }}>
-              {this.state.location.coords.latitude.toPrecision(7)},
-              {this.state.location.coords.longitude.toPrecision(7)}
-            </Text>
-          </View>
-          <FooterTab>
-            <Button active full>
-              <Text>4me305 assignment 2</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
+        <Badge style={{ backgroundColor: 'black', alignSelf: 'center' }}>
+          <Text style={{ textAlign: 'center' }}>
+            {this.state.location.coords.latitude.toPrecision(7)},
+            {this.state.location.coords.longitude.toPrecision(7)}
+          </Text>
+        </Badge>
+        <MyFooter />
       </Container>
     );
   }

@@ -20,6 +20,12 @@ const datas = [
     icon: 'md-log-in',
     bg: '#C5F442',
   },
+  {
+    name: 'cameraScreen',
+    route: 'CameraScreen',
+    icon: 'md-camera',
+    bg: '#C5F442',
+  },
 ];
 
 class SideBar extends Component {
