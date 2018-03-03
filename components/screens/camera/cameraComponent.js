@@ -87,11 +87,7 @@ export default class CameraComponent extends Component {
             <View style={{ alignItems: 'center' }}>
               <Icon name="camera" style={{ color: 'white', fontSize: 80 }} onPress={this.snap} />
             </View>
-            <Icon
-              name="images"
-              style={{ color: 'white', fontSize: 36 }}
-              onPress={this.pickImagel}
-            />
+            <Icon name="images" style={{ color: 'white', fontSize: 36 }} onPress={this.pickImage} />
           </View>
         </Camera>
       </View>
