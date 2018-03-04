@@ -19,12 +19,12 @@ import MyFooter from '../../setups/MyFooter';
 import MyHeader from '../../setups/MyHeader';
 
 const FACBOOK_APP_ID = '260440777826338';
-const GOOGLE_APP_ID = 'AIzaSyAWoRdwvUuGc-Zkjabk3KfE7jF64XfVcFM';
+/* const GOOGLE_APP_ID = 'AIzaSyAWoRdwvUuGc-Zkjabk3KfE7jF64XfVcFM'; */
 const GOOGLE_ANDROID_CLIENT_ID =
   '670796361568-qfrsse6le8h6ua13clhrfcq32jba4cgm.apps.googleusercontent.com';
 const GOOGLE_IOS_CLIENT_ID =
   '670796361568-qtg57jedveiql7t6coo39qf31vflant5.apps.googleusercontent.com';
-const oenssl = 'dd:3d:ae:6b:68:a7:69:ea:ac:36:aa:24:d2:ac:a8:8d:a2:c4:a8:0b';
+/* const openssl = 'dd:3d:ae:6b:68:a7:69:ea:ac:36:aa:24:d2:ac:a8:8d:a2:c4:a8:0b'; */
 
 export default class Login extends Component {
   constructor() {
@@ -83,7 +83,6 @@ export default class Login extends Component {
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(FACBOOK_APP_ID, {
       permissions: ['public_profile', 'email', 'user_friends', 'user_status'],
     });
-
     if (type === 'success') {
       this.callGraph(token);
       /* this.firebaseLogin(token); */
@@ -163,12 +162,7 @@ export default class Login extends Component {
   }
 
   render() {
-    const {
-      token, name, email, image,
-    } = this.state;
-    console.log('Token: ', token);
-    console.log('Name: ', name);
-    console.log('Email', email);
+    const { name, email, image } = this.state;
     if (this.state.token) {
       return (
         <Container style={{ backgroundColor: '#fff' }}>
